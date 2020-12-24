@@ -3,16 +3,18 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		7802EBFB25881EDF00973292 /* SherwoodSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7802EBFA25881EDF00973292 /* SherwoodSwiftUIApp.swift */; };
-		7802EBFD25881EDF00973292 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7802EBFC25881EDF00973292 /* ContentView.swift */; };
+		7802EBFD25881EDF00973292 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7802EBFC25881EDF00973292 /* HomeView.swift */; };
 		7802EBFF25881EE300973292 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7802EBFE25881EE300973292 /* Assets.xcassets */; };
 		7802EC0225881EE300973292 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7802EC0125881EE300973292 /* Preview Assets.xcassets */; };
 		7802EC0D25881EE400973292 /* SherwoodSwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7802EC0C25881EE400973292 /* SherwoodSwiftUITests.swift */; };
 		7802EC1825881EE400973292 /* SherwoodSwiftUIUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7802EC1725881EE400973292 /* SherwoodSwiftUIUITests.swift */; };
+		786BD200258AB4250009BA9E /* KingfisherSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 786BD1FF258AB4250009BA9E /* KingfisherSwiftUI */; };
+		789E08DA258EA43D005AF770 /* ListingResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789E08D9258EA43D005AF770 /* ListingResult.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,10 +34,23 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		786BD1F7258AB3460009BA9E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		7802EBF725881EDF00973292 /* SherwoodSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SherwoodSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7802EBFA25881EDF00973292 /* SherwoodSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherwoodSwiftUIApp.swift; sourceTree = "<group>"; };
-		7802EBFC25881EDF00973292 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		7802EBFC25881EDF00973292 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		7802EBFE25881EE300973292 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7802EC0125881EE300973292 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7802EC0325881EE300973292 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -45,6 +60,7 @@
 		7802EC1325881EE400973292 /* SherwoodSwiftUIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SherwoodSwiftUIUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7802EC1725881EE400973292 /* SherwoodSwiftUIUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherwoodSwiftUIUITests.swift; sourceTree = "<group>"; };
 		7802EC1925881EE400973292 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		789E08D9258EA43D005AF770 /* ListingResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingResult.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				786BD200258AB4250009BA9E /* KingfisherSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,10 +113,11 @@
 			isa = PBXGroup;
 			children = (
 				7802EBFA25881EDF00973292 /* SherwoodSwiftUIApp.swift */,
-				7802EBFC25881EDF00973292 /* ContentView.swift */,
+				7802EBFC25881EDF00973292 /* HomeView.swift */,
 				7802EBFE25881EE300973292 /* Assets.xcassets */,
 				7802EC0325881EE300973292 /* Info.plist */,
 				7802EC0025881EE300973292 /* Preview Content */,
+				789E08D9258EA43D005AF770 /* ListingResult.swift */,
 			);
 			path = SherwoodSwiftUI;
 			sourceTree = "<group>";
@@ -140,12 +158,16 @@
 				7802EBF325881EDF00973292 /* Sources */,
 				7802EBF425881EDF00973292 /* Frameworks */,
 				7802EBF525881EDF00973292 /* Resources */,
+				786BD1F7258AB3460009BA9E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = SherwoodSwiftUI;
+			packageProductDependencies = (
+				786BD1FF258AB4250009BA9E /* KingfisherSwiftUI */,
+			);
 			productName = SherwoodSwiftUI;
 			productReference = 7802EBF725881EDF00973292 /* SherwoodSwiftUI.app */;
 			productType = "com.apple.product-type.application";
@@ -217,6 +239,9 @@
 				Base,
 			);
 			mainGroup = 7802EBEE25881EDE00973292;
+			packageReferences = (
+				786BD1FE258AB4250009BA9E /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			productRefGroup = 7802EBF825881EDF00973292 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -259,8 +284,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7802EBFD25881EDF00973292 /* ContentView.swift in Sources */,
+				7802EBFD25881EDF00973292 /* HomeView.swift in Sources */,
 				7802EBFB25881EDF00973292 /* SherwoodSwiftUIApp.swift in Sources */,
+				789E08DA258EA43D005AF770 /* ListingResult.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -580,6 +606,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		786BD1FE258AB4250009BA9E /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.15.8;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		786BD1FF258AB4250009BA9E /* KingfisherSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 786BD1FE258AB4250009BA9E /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = KingfisherSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7802EBEF25881EDE00973292 /* Project object */;
 }
