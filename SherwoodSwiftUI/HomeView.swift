@@ -8,66 +8,124 @@
 import SwiftUI
 import KingfisherSwiftUI
 
+struct Listings: Decodable {
+    let D: d
+}
+struct d: Decodable {
+    let Results: [QueryResult]
+}
+struct QueryResult: Decodable, Hashable {
+    var Id: String
+    var ResourceUri: String
+    var StandardFields: Fields
+
+    struct Fields: Decodable, Hashable {
+        var BuildingAreaTotal: Float
+        let Latitude: Double
+        let Longitude: Double
+        var ListingId: String
+        var ListAgentName: String
+        var CoListAgentName: String
+        var MlsStatus: String
+        var ListOfficePhone: String
+        
+        var UnparsedFirstLineAddress: String
+        var City: String
+        var PostalCode: String
+        var StateOrProvince: String
+        
+        var CurrentPricePublic: Int
+//        var PublicRemarks: String?
+      
+        var VirtualTours: [VirtualToursObjs]?
+        struct VirtualToursObjs: Codable, Hashable {
+            var Uri: String?
+        }
+        var Videos: [VideosObjs]?
+        struct VideosObjs: Codable, Hashable {
+            var ObjectHtml: String?
+        }
+//
+        var Documents: [DocumentsAvailable]?
+        struct DocumentsAvailable: Codable, Hashable {
+            var Id: String
+            var ResourceId: String
+            var Name: String
+        }
+        var Photos: [PhotoDictionary]?
+        struct PhotoDictionary: Codable, Hashable {
+            var Id: String
+            var Name: String
+            var Uri300: String
+
+        }
+    }
+
+}
 
 class HomeViewModel: ObservableObject {
     @Published var items = 0..<5
-    @Published var listingResults = [ListingResult]()
-    
+    @Published var listingResults = [QueryResult]()
+    @Published var listingFields = [QueryResult.Fields]()
+//    @Published var fields = [Fields]()
     init() {
         guard let url = URL(string: "http://artisanbranding.com/test.json") else { return }
         
         URLSession.shared.dataTask(with: url) { (data, url, error) in
-            DispatchQueue.main.async {  
+            DispatchQueue.main.async {
                 guard let data = data else { return }
                 do  {
-                    if let homeModel = try? JSONDecoder().decode(HomeModel.self, from: data) {
-                        print(homeModel.D.Results)
-//                        print(homeModel.id)
-                    }
-//                    self.homeModel standardFields= try JSON Decoder().decode(HomeModel.self, from: data)
-//                    print(homeModel ??"")
-                } catch let jsonError {
-                    print("decoding failed for UserDetails", jsonError)
+//                    if let homeModel = try? JSONDecoder().decode(Listings.self, from: data) {
+                    let homeModel = try JSONDecoder().decode(Listings.self, from: data)
+                    print(homeModel)
+                    
+                    self.listingResults = homeModel.D.Results
+                    
+//                    }
+                } catch {
+                    print("Failed to decode \(error)")
 //                    self.errorMessage = error.localizedDescription
 
                 }
-                print(data)
+//                print(data)
             }
         }.resume()
     }
 }
 struct HomeView: View {
     @ObservedObject var vm = HomeViewModel()
+    
     var body: some View {
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVGrid(columns:
-                            [
-                                GridItem(.flexible(minimum: 100, maximum: 200), spacing: 12),
-                                GridItem(.flexible(minimum: 100, maximum: 200), spacing: 12),
-                                GridItem(.flexible(minimum: 100, maximum: 200))
-                                
-                            ], spacing:12, content: {
-                                ForEach(vm.items, id: \.self) { num in
-                                    VStack (alignment: .leading) {
-                                    Spacer().frame(width: 100, height: 100).background(Color.blue)
-                                    
-                                    Text("Willow")
-                                    Text("4,300,000")
-                                    Text("Sale Pending")
-                                    }
-                                }
-                                
-                            }).background(Color.gray)
+        NavigationView{
+            ScrollView {
                 
-                
-                VStack(spacing: 0) {
-                    GeometryReader { geo in
-                        KFImage(URL(string: "https://cdn.resize.sparkplatform.com/vc/1600x1200/true/20200729003019512986000000-o.jpg"))
+                LazyVGrid(columns: [
+                    GridItem(.flexible(minimum: 100, maximum: 200), spacing: 16, alignment: .top),
+                    GridItem(.flexible(minimum: 100, maximum: 200), spacing: 16, alignment: .top),
+                    GridItem(.flexible(minimum: 100, maximum: 200), spacing: 16),
+                ],alignment: .leading, spacing: 16, content: {
+            
+                    ForEach(vm.listingResults, id: \.self) { num in
+//                        print(num.)
+                        VStack(alignment:.leading, spacing: 4) {
+                            KFImage(URL(string: "num.listingResults"))
+                                
                                 .resizable()
-                                .scaledToFill()
+                                .scaledToFit()
+                                .cornerRadius(22)
+                            
+                            Text(num.StandardFields.MlsStatus).font(.system(size: 20, weight: .semibold)).padding(4 )
+                            Text(num.StandardFields.UnparsedFirstLineAddress).font(.system(size: 16, weight: .regular))
+                            Text("\(num.StandardFields.CurrentPricePublic)").font(.system(size: 12, weight: .regular)).foregroundColor(.black)
+                            Spacer()
+                        }
+//                        .padding()
+                      //.background(Color.blue)
                     }
-                }
-            .frame(maxWidth: .infinity)
+                    
+                }).padding(.horizontal)
+                
+            }.navigationTitle("gridsearch")
         }
     }
 }
@@ -75,7 +133,7 @@ struct HomeView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            HomeView(vm: .init())
+            HomeView()
         }
     }
 }
