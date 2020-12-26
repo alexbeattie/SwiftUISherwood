@@ -64,7 +64,7 @@ struct Fields: Decodable, Hashable {
     }
 }
 class HomeViewModel: ObservableObject {
-    @Published var items = 0..<5
+//    @Published var items = 0..<5
     @Published var listingResults = [QueryResult]()
 //    @Published var listingFields = [QueryResult.Fields]()
 //    @Published var fields = [Fields]()
@@ -92,42 +92,67 @@ class HomeViewModel: ObservableObject {
         }.resume()
     }
 }
+struct NavigationLazyView<Content: View>: View {
+    
+    let build: () -> Content
+    init(_ build: @autoclosure @escaping () -> Content) {
+        self.build = build
+    }
+    var body: Content {
+        build()
+    }
+}
 struct HomeView: View {
     @ObservedObject var vm = HomeViewModel()
     
     var body: some View {
-        NavigationView{
+        NavigationView {
             ScrollView {
-                VStack(spacing: 4) {
-                    ForEach(vm.listingResults, id: \.self) { num in
-                            KFImage(URL(string:num.StandardFields.Photos?.first?.Uri300 ?? ""))
-                                .resizable()
-                                .scaledToFill()
-                                .frame(height:200)
-                                .clipped()
+                ForEach(vm.listingResults, id: \.self) { num in
+                    NavigationLink(
+                        destination: NavigationLazyView(DestinationDetailsView()),
+                        label: {
+                            VStack (alignment:.leading, spacing: 8) {
+                               
+                                KFImage(URL(string:num.StandardFields.Photos?.first?.Uri300 ?? ""))
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(minWidth:200, minHeight:200)
+                                    .clipped()
+                                    .shadow(radius: 10)
+                                    .cornerRadius(6)
+                                    
 
+                                VStack (alignment:.leading, spacing: 2) {
+                                    Text(num.StandardFields.UnparsedFirstLineAddress)
+                                        .font(.system(size: 16, weight: .regular))
+                                        .foregroundColor(Color(.label))
+                                    Text("\(num.StandardFields.CurrentPricePublic)")
+                                        .font(.system(size: 12, weight: .regular))
+                                        .foregroundColor(Color(.label))
+                                    Text(num.StandardFields.MlsStatus)
+                                        .font(.system(size: 12, weight: .semibold))
+                                        .foregroundColor(Color(.label))
+
+                                }
+                                Spacer()
+                                Spacer()
+                            }
                             
-                            Text(num.StandardFields.UnparsedFirstLineAddress).font(.system(size: 16, weight: .regular))
-                            Text("\(num.StandardFields.CurrentPricePublic)").font(.system(size: 12, weight: .regular)).foregroundColor(.black)
-                        Text(num.StandardFields.MlsStatus).font(.system(size: 20, weight: .semibold)).padding(4 )
-//                            Spacer()
-                        }
-//                        .padding()
-                      //.background(Color.blue)
-                    }
+                        })
                     
+                }
                 
-            .padding(.horizontal)
-                
-            }.navigationTitle("Listings")
-        }
+            }
+            }.padding(.horizontal)
+//        }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
+//        NavigationView {
             HomeView()
-        }
+//        }
     }
 }

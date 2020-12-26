@@ -14,7 +14,7 @@
 		7802EC0D25881EE400973292 /* SherwoodSwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7802EC0C25881EE400973292 /* SherwoodSwiftUITests.swift */; };
 		7802EC1825881EE400973292 /* SherwoodSwiftUIUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7802EC1725881EE400973292 /* SherwoodSwiftUIUITests.swift */; };
 		786BD200258AB4250009BA9E /* KingfisherSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 786BD1FF258AB4250009BA9E /* KingfisherSwiftUI */; };
-		789E08DA258EA43D005AF770 /* ListingResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789E08D9258EA43D005AF770 /* ListingResult.swift */; };
+		788D6DC82596E315005E2CF7 /* DestinationDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788D6DC72596E315005E2CF7 /* DestinationDetailsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,7 +60,7 @@
 		7802EC1325881EE400973292 /* SherwoodSwiftUIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SherwoodSwiftUIUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7802EC1725881EE400973292 /* SherwoodSwiftUIUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherwoodSwiftUIUITests.swift; sourceTree = "<group>"; };
 		7802EC1925881EE400973292 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		789E08D9258EA43D005AF770 /* ListingResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingResult.swift; sourceTree = "<group>"; };
+		788D6DC72596E315005E2CF7 /* DestinationDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationDetailsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,10 +114,10 @@
 			children = (
 				7802EBFA25881EDF00973292 /* SherwoodSwiftUIApp.swift */,
 				7802EBFC25881EDF00973292 /* HomeView.swift */,
+				788D6DC72596E315005E2CF7 /* DestinationDetailsView.swift */,
 				7802EBFE25881EE300973292 /* Assets.xcassets */,
 				7802EC0325881EE300973292 /* Info.plist */,
 				7802EC0025881EE300973292 /* Preview Content */,
-				789E08D9258EA43D005AF770 /* ListingResult.swift */,
 			);
 			path = SherwoodSwiftUI;
 			sourceTree = "<group>";
@@ -286,7 +286,7 @@
 			files = (
 				7802EBFD25881EDF00973292 /* HomeView.swift in Sources */,
 				7802EBFB25881EDF00973292 /* SherwoodSwiftUIApp.swift in Sources */,
-				789E08DA258EA43D005AF770 /* ListingResult.swift in Sources */,
+				788D6DC82596E315005E2CF7 /* DestinationDetailsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
