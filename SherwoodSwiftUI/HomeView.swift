@@ -107,45 +107,63 @@ struct HomeView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
+            ScrollView (showsIndicators: false) {
                 ForEach(vm.listingResults, id: \.self) { num in
+                    
+                    
                     NavigationLink(
                         destination: NavigationLazyView(DestinationDetailsView()),
                         label: {
-                            VStack (alignment:.leading, spacing: 8) {
-                               
+                            
+                            
+                            VStack (alignment:.leading, spacing: 4) {
+                                
                                 KFImage(URL(string:num.StandardFields.Photos?.first?.Uri300 ?? ""))
                                     .resizable()
                                     .scaledToFill()
+                                    .cornerRadius(6)
+                                    .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
+                                    .shadow(radius: 2)
+
                                     .frame(minWidth:200, minHeight:200)
                                     .clipped()
                                     .shadow(radius: 10)
-                                    .cornerRadius(6)
-                                    
-
+                                    .padding(.bottom)
+//                                    .background(Color.blue)
+                                
                                 VStack (alignment:.leading, spacing: 2) {
-                                    Text(num.StandardFields.UnparsedFirstLineAddress)
-                                        .font(.system(size: 16, weight: .regular))
-                                        .foregroundColor(Color(.label))
-                                    Text("\(num.StandardFields.CurrentPricePublic)")
-                                        .font(.system(size: 12, weight: .regular))
-                                        .foregroundColor(Color(.label))
-                                    Text(num.StandardFields.MlsStatus)
-                                        .font(.system(size: 12, weight: .semibold))
-                                        .foregroundColor(Color(.label))
-
-                                }
+                                Text(num.StandardFields.UnparsedFirstLineAddress)
+                                    .font(.system(size: 16, weight: .regular))
+                                    .foregroundColor(Color(.label))
+                                Text("\(num.StandardFields.CurrentPricePublic)")
+                                    .font(.system(size: 12, weight: .regular))
+                                    .foregroundColor(Color(.label))
+                                Text(num.StandardFields.MlsStatus)
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(Color(.label))
+                                
                                 Spacer()
-                                Spacer()
+                                    .edgesIgnoringSafeArea(.top)
+                                }.padding(.horizontal)
+                                
                             }
+                            .cornerRadius(4)
+                            .shadow(radius: 2)
+//                            .border
+//                            .cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/)
+//                            .background(Color.yellow)
+                            
                             
                         })
                     
-                }
+                }.padding()
                 
             }
-            }.padding(.horizontal)
-//        }
+            .navigationBarTitle("Listings", displayMode: .inline)
+
+//            .padding(.horizontal)
+        }
+        
     }
 }
 
