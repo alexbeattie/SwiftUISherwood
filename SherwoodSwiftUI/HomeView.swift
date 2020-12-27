@@ -38,7 +38,7 @@ struct Fields: Decodable, Hashable {
     var StateOrProvince: String
     
     var CurrentPricePublic: Int
-//        var PublicRemarks: String?
+    var PublicRemarks: String?
   
     var VirtualTours: [VirtualToursObjs]?
     struct VirtualToursObjs: Codable, Hashable {
@@ -114,8 +114,6 @@ struct HomeView: View {
                     NavigationLink(
                         destination: NavigationLazyView(DestinationDetailsView()),
                         label: {
-                            
-                            
                             VStack (alignment:.leading, spacing: 4) {
                                 
                                 KFImage(URL(string:num.StandardFields.Photos?.first?.Uri300 ?? ""))
@@ -129,7 +127,6 @@ struct HomeView: View {
                                     .clipped()
                                     .shadow(radius: 10)
                                     .padding(.bottom)
-//                                    .background(Color.blue)
                                 
                                 VStack (alignment:.leading, spacing: 2) {
                                 Text(num.StandardFields.UnparsedFirstLineAddress)
@@ -143,27 +140,18 @@ struct HomeView: View {
                                     .foregroundColor(Color(.label))
                                 
                                 Spacer()
-                                    .edgesIgnoringSafeArea(.top)
+                                .edgesIgnoringSafeArea(.top)
                                 }.padding(.horizontal)
                                 
                             }
                             .cornerRadius(4)
                             .shadow(radius: 2)
-//                            .border
-//                            .cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/)
-//                            .background(Color.yellow)
-                            
-                            
                         })
                     
                 }.padding()
-                
             }
-            .navigationBarTitle("Listings", displayMode: .inline)
-
-//            .padding(.horizontal)
+             .navigationBarTitle("Listings", displayMode: .inline)
         }
-        
     }
 }
 
