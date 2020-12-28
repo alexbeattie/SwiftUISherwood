@@ -64,10 +64,10 @@ struct Fields: Decodable, Hashable {
     }
 }
 class HomeViewModel: ObservableObject {
-//    @Published var items = 0..<5
+
     @Published var listingResults = [QueryResult]()
-//    @Published var listingFields = [QueryResult.Fields]()
-//    @Published var fields = [Fields]()
+    @Published var listingFields = [Fields]()
+
     init() {
         guard let url = URL(string: "http://artisanbranding.com/test.json") else { return }
         
@@ -81,84 +81,92 @@ class HomeViewModel: ObservableObject {
                     
                     self.listingResults = homeModel.D.Results
                     
-//                    }
                 } catch {
                     print("Failed to decode \(error)")
-//                    self.errorMessage = error.localizedDescription
 
                 }
-//                print(data)
             }
         }.resume()
     }
 }
-struct NavigationLazyView<Content: View>: View {
-    
-    let build: () -> Content
-    init(_ build: @autoclosure @escaping () -> Content) {
-        self.build = build
-    }
-    var body: Content {
-        build()
-    }
-}
+
 struct HomeView: View {
-    @ObservedObject var vm = HomeViewModel()
+    @StateObject var vm = HomeViewModel()
+    //    let listing : Listings
+    
     
     var body: some View {
-        NavigationView {
-            ScrollView (showsIndicators: false) {
-                ForEach(vm.listingResults, id: \.self) { num in
-                    
-                    
-                    NavigationLink(
-                        destination: NavigationLazyView(DestinationDetailsView()),
-                        label: {
-                            VStack (alignment:.leading, spacing: 4) {
-                                
-                                KFImage(URL(string:num.StandardFields.Photos?.first?.Uri300 ?? ""))
-                                    .resizable()
-                                    .scaledToFill()
-                                    .cornerRadius(6)
-                                    .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
-                                    .shadow(radius: 2)
+        
+//        NavigationView {
+            ZStack {
+                
+                ScrollView {
+                    ForEach(vm.listingResults, id: \.self) { listing in
+                       // VStack (alignment:.leading, spacing: 0) {
+                            NavigationLink(
+                                destination: Card(),
+                                label: {
+                                    VStack (alignment:.leading, spacing: 0) {
 
-                                    .frame(minWidth:200, minHeight:200)
-                                    .clipped()
-                                    .shadow(radius: 10)
-                                    .padding(.bottom)
-                                
-                                VStack (alignment:.leading, spacing: 2) {
-                                Text(num.StandardFields.UnparsedFirstLineAddress)
-                                    .font(.system(size: 16, weight: .regular))
-                                    .foregroundColor(Color(.label))
-                                Text("\(num.StandardFields.CurrentPricePublic)")
-                                    .font(.system(size: 12, weight: .regular))
-                                    .foregroundColor(Color(.label))
-                                Text(num.StandardFields.MlsStatus)
-                                    .font(.system(size: 12, weight: .semibold))
-                                    .foregroundColor(Color(.label))
-                                
-                                Spacer()
-                                .edgesIgnoringSafeArea(.top)
-                                }.padding(.horizontal)
-                                
-                            }
-                            .cornerRadius(4)
-                            .shadow(radius: 2)
-                        })
-                    
-                }.padding()
+                                    KFImage(URL(string:listing.StandardFields.Photos?.first?.Uri300 ?? ""))
+                                        .resizable()
+                                        .scaledToFill()
+                                        .cornerRadius(6)
+                                        .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
+                                        .shadow(radius: 2)
+                                        
+                                        .frame(width:400, height:200)
+                                        .clipped()
+                                        .shadow(radius: 10)
+//                                        .padding(.bottom)
+                                    
+                                        VStack (alignment: .leading, spacing: 0) {
+                                            
+                                            Text(listing.StandardFields.UnparsedFirstLineAddress)
+                                                .font(.system(size: 16, weight: .regular))
+                                                .foregroundColor(Color(.label))
+                                            Text("\(listing.StandardFields.CurrentPricePublic)")
+                                                .font(.system(size: 12, weight: .regular))
+                                                .foregroundColor(Color(.label))
+                                            Text(listing.StandardFields.MlsStatus)
+                                                .font(.system(size: 12, weight: .semibold))
+                                                .foregroundColor(Color(.label))
+                                            
+                                        }.padding()
+//                                        Spacer()
+                                            
+//                                            .edgesIgnoringSafeArea(.top)
+                                    }.asTile().padding()
+                                    
+                                    
+                                })
+                    }
+                }.navigationBarTitle("alex", displayMode: .inline)
             }
-             .navigationBarTitle("Listings", displayMode: .inline)
+   
+        
+    }
+    }
+
+struct Card: View {
+
+    @StateObject var vm = HomeViewModel()
+
+    var body: some View {
+        NavigationView {
+//            Text(vm.listingFields.first?.City ?? "")
+//            Text(vm.listingResults.first?.StandardFields.ListAgentName ?? "")
+            Text(vm.listingResults.first?.StandardFields.ListingId ?? "")
         }
     }
 }
-
 struct ContentView_Previews: PreviewProvider {
+//    var listing:Listings
     static var previews: some View {
-//        NavigationView {
+        
+        NavigationView{
             HomeView()
-//        }
+
+        }
     }
 }

@@ -10,12 +10,14 @@ import MapKit
 import KingfisherSwiftUI
 
 struct DestinationDetailsView: View {
-//    let listing: Listings
+
 //    @ObservedObject var vm = HomeViewModel()
 //    @Published var listingResults = [QueryResult]()
     @ObservedObject var vm = HomeViewModel()
+//    @ObservedObject var vm:HomeViewModel
+//    let listing: Listings
     
-    var listingResults = [Fields]()
+//    let fields:Fields
 
 //    let listing: Listings
 //    let listing: HomeViewModel
@@ -37,11 +39,11 @@ struct DestinationDetailsView: View {
 }
 #if DEBUG
 struct DestinationDetailsView_Previews: PreviewProvider {
-//    static var listing:   Listings?
+    static var listing:   Listings?
     
     static var previews: some View {
         NavigationView {
-            HomeView()
+//            HomeView()
             DestinationDetailsView()
         }
     }
