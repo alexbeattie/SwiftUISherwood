@@ -27,10 +27,10 @@ struct DestinationDetailsView: View {
                 
 //                KFImage(URL(string: listingResults.first?.StandardFields.CoListAgentName ?? ""))
 //                    .resizable().frame(height:200)
-                Text(vm.listingResults.first?.StandardFields.CoListAgentName ?? "")
-                Text(vm.listingResults.first?.StandardFields.City ?? "")
-                Text("\(vm.listingResults.first?.StandardFields.CurrentPricePublic ?? 0)")
-                Text(vm.listingResults.first?.StandardFields.PublicRemarks ?? "")
+//                Text(vm.listingResults.first?.StandardFields.CoListAgentName ?? "")
+//                Text(vm.listingResults.first?.StandardFields.City ?? "")
+//                Text("\(vm.listingResults.first?.StandardFields.CurrentPricePublic ?? 0)")
+//                Text(vm.listingResults.first?.StandardFields.PublicRemarks ?? "")
 
             }.padding(.horizontal)
         }
