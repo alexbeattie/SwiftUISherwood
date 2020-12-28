@@ -66,7 +66,8 @@ struct Fields: Decodable, Hashable {
 class HomeViewModel: ObservableObject {
 
     @Published var listingResults = [QueryResult]()
-    @Published var listingFields = [Fields]()
+//    @Published var listingFields = [Fields]()
+    @Published var listingFields = [Listings]()
 
     init() {
         guard let url = URL(string: "http://artisanbranding.com/test.json") else { return }
@@ -81,6 +82,7 @@ class HomeViewModel: ObservableObject {
                     
                     self.listingResults = homeModel.D.Results
                     
+                    
                 } catch {
                     print("Failed to decode \(error)")
 
@@ -91,18 +93,15 @@ class HomeViewModel: ObservableObject {
 }
 
 struct HomeView: View {
-    @StateObject var vm = HomeViewModel()
-    //    let listing : Listings
+    @ObservedObject var vm = HomeViewModel()
     
     
     var body: some View {
         
 //        NavigationView {
             ZStack {
-                
                 ScrollView {
                     ForEach(vm.listingResults, id: \.self) { listing in
-                       // VStack (alignment:.leading, spacing: 0) {
                             NavigationLink(
                                 destination: Card(),
                                 label: {
@@ -115,7 +114,7 @@ struct HomeView: View {
                                         .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
                                         .shadow(radius: 2)
                                         
-                                        .frame(width:400, height:200)
+                                        .frame(width:350, height:200)
                                         .clipped()
                                         .shadow(radius: 10)
 //                                        .padding(.bottom)
@@ -135,28 +134,66 @@ struct HomeView: View {
                                         }.padding()
 //                                        Spacer()
                                             
-//                                            .edgesIgnoringSafeArea(.top)
-                                    }.asTile().padding()
+                                            .edgesIgnoringSafeArea(.top)
+                                    }.asTile().padding(.horizontal)
+                                    
                                     
                                     
                                 })
                     }
                 }.navigationBarTitle("alex", displayMode: .inline)
             }
-   
-        
     }
-    }
+}
 
+class HomeViewDetailViewModel: ObservableObject {
+    @Published var isLoading = true
+//    @Published var listings = [Int]()
+//    @Published var listingResults = [QueryResult]()
+
+    init() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.isLoading = false
+        }
+    }
+}
 struct Card: View {
-
-    @StateObject var vm = HomeViewModel()
-
+    
+    @ObservedObject var am = HomeViewDetailViewModel()
+//    @State var isLoading = false
+    @ObservedObject var vm = HomeViewModel()
+    
     var body: some View {
-        NavigationView {
-//            Text(vm.listingFields.first?.City ?? "")
-//            Text(vm.listingResults.first?.StandardFields.ListAgentName ?? "")
-            Text(vm.listingResults.first?.StandardFields.ListingId ?? "")
+        ZStack {
+            if am.isLoading {
+                Text("Currently Loading")
+            } else {
+                NavigationView {
+                    ScrollView {
+                        ForEach(vm.listingResults, id:\.self) { num in
+                            VStack(alignment: .leading, spacing: 2) {
+                                KFImage(URL(string:num.StandardFields.Photos?.first?.Uri300 ?? ""))
+                                    .resizable()
+                                    .scaledToFill()
+                                    .cornerRadius(6)
+                                    .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
+                                    .shadow(radius: 2)
+                                    
+                                    .frame(width:350, height:.infinity)
+                                    .clipped()
+                                    .shadow(radius: 10)
+
+                                Text(num.Id)
+                                Text(num.StandardFields.PublicRemarks ?? "")
+//                                Text(num.StandardFields.Photos?.first?.Uri300 ?? "")
+                                
+//                                Text(vm.StandardFields.Photos?.first?.Uri300 ?? "")
+//                                Text(vm.listingResults.first?.StandardFields.ListingId ?? "")
+                            }.asTile().frame(width:350,height: 200).padding(.bottom).background(Color.gray)
+                        }
+                    }.navigationBarTitle("details", displayMode: .inline)
+                }
+            }
         }
     }
 }
@@ -165,8 +202,13 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         
         NavigationView{
+//            Card()
             HomeView()
+        
+        
+            
 
         }
+        
     }
 }
