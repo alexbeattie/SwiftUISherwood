@@ -96,45 +96,21 @@ class HomeViewModel: ObservableObject {
 }
 
 struct HomeView: View {
+//    let name:String?
+//    init(name: String) {
+//        self.name = name
+//    }
     @ObservedObject var vm = HomeViewModel()
     var body: some View {
         
         ScrollView {
             ForEach(vm.listingResults, id: \.self) { listing in
                 NavigationLink(
-                    destination: Card(),
+//                    destination: HomeDetailsView(),
+                    destination: PopDestDetailsView(listing: listing),
                     label: {
-                        VStack (alignment:.leading, spacing: 0) {
-                            
-                            KFImage(URL(string:listing.StandardFields.Photos?.first?.Uri300 ?? ""))
-                                .resizable()
-                                .scaledToFill()
-                                .cornerRadius(6)
-                                .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
-                                .shadow(radius: 2)
-                                .frame(width:400, height:200)
-                                .clipped()
-                                .shadow(radius: 10)
-                            
-                            VStack (alignment: .leading, spacing: 0) {
-                                
-                                Text(listing.StandardFields.UnparsedFirstLineAddress)
-                                    .font(.system(size: 16, weight: .regular))
-                                    .foregroundColor(Color(.label))
-                                Text("\(listing.StandardFields.CurrentPricePublic)")
-                                    .font(.system(size: 12, weight: .regular))
-                                    .foregroundColor(Color(.label))
-                                Text(listing.StandardFields.MlsStatus)
-                                    .font(.system(size: 12, weight: .semibold))
-                                    .foregroundColor(Color(.label))
-                                
-                            }.padding()
-                            //                                        Spacer()
-                            
-//                            .edgesIgnoringSafeArea(.top)
-                        }.asTile()
-                        
-                        
+                                                
+                        HomeRow(listing: listing)
                         
                     })
             }
@@ -142,7 +118,41 @@ struct HomeView: View {
         
     }
 }
+struct HomeRow: View {
+    let listing:QueryResult
+    var body: some View {
+        VStack (alignment:.leading, spacing: 0) {
+            
+            KFImage(URL(string:listing.StandardFields.Photos?.first?.Uri300 ?? ""))
+                .resizable()
+                .scaledToFill()
+                .cornerRadius(6)
+                .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
+                .shadow(radius: 2)
+                .frame(width:400, height:200)
+                .clipped()
+                .shadow(radius: 10)
+            
+            VStack (alignment: .leading, spacing: 0) {
+                
+                Text(listing.StandardFields.UnparsedFirstLineAddress)
+                    .font(.system(size: 16, weight: .regular))
+                    .foregroundColor(Color(.label))
+                Text("\(listing.StandardFields.CurrentPricePublic)")
+                    .font(.system(size: 12, weight: .regular))
+                    .foregroundColor(Color(.label))
+                Text(listing.StandardFields.MlsStatus)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(Color(.label))
+                
+            }.padding()
+            //                                        Spacer()
+            
+//                            .edgesIgnoringSafeArea(.top)
+        }.asTile()
 
+    }
+}
 class HomeViewDetailViewModel: ObservableObject {
     @Published var isLoading = true
     init() {
@@ -151,65 +161,90 @@ class HomeViewDetailViewModel: ObservableObject {
         }
     }
 }
-struct Card: View {
-//    let name:String
-//    @ObservedObject var am = HomeViewDetailViewModel()
-//    @State var isLoading = false
-    @ObservedObject var vm = HomeViewModel()
-    
+struct PopDestDetailsView: View {
+    let listing:QueryResult
     var body: some View {
-//        ZStack {
-//            if am.isLoading {
-//                VStack {
-//                    ActivityIndicatorView()
-//                    Text("Loading").foregroundColor(.gray).font(.system(size: 14, weight: .semibold))
-//                }
-//                .padding()
-//                .background(Color.black).cornerRadius(8)
-//
-//            } else {
-//                NavigationView {
-                    ScrollView {
-                        ForEach(vm.listingResults, id:\.self) { num in
-                            VStack(alignment: .leading, spacing: 0) {
-                                KFImage(URL(string:num.StandardFields.Photos?.first?.Uri300 ?? ""))
-                                    .resizable()
-                                    .frame(width:400, height:200)
-                                    .scaledToFit()
-                                    .cornerRadius(6)
-                                    .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
-                                    .shadow(radius: 10)
-                                VStack {
-//                                    Text(num.Id)
-                                    Text(num.StandardFields.PublicRemarks ?? "").padding().font(.system(size: 16, weight: .regular))
-                                        .foregroundColor(Color(.label))
-                                            Text(num.Id)
-                                                                .edgesIgnoringSafeArea(.top)
-                                }.padding(.bottom)
-//                                Text(num.StandardFields.Photos?.first?.Uri300 ?? "")
-                                
-//                                Text(vm.StandardFields.Photos?.first?.Uri300 ?? "")
-//                                Text(vm.listingResults.first?.StandardFields.ListingId ?? "")
-                            }.asTile()
-                        }
-                    }.navigationBarTitle("details", displayMode: .inline)
-                
+        ScrollView {
+            KFImage(URL(string:listing.StandardFields.Photos?.first?.Uri300 ?? ""))
+                .resizable()
+                .frame(width:400, height:200)
+                .scaledToFit()
+                .cornerRadius(6)
+                .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
+                .shadow(radius: 10)
+            VStack {
+                Text(listing.StandardFields.PublicRemarks ?? "")
+                    .padding()
+                    .font(.system(size: 16, weight: .regular))
+                    .foregroundColor(Color(.label))
+                Text("\(listing.StandardFields.CurrentPricePublic)")
+                //                        .edgesIgnoringSafeArea(.top)
+                    .asTile()
+            }
+            Text(listing.StandardFields.CoListAgentName)
+        }.navigationBarTitle(listing.Id, displayMode: .inline)
+    }
+}
+
+
+
+
+
+struct HomeDetailsView: View {
+    @ObservedObject var vm = HomeViewModel()
+//    let listing:QueryResult
+
+    var body: some View {
+        
+        ScrollView {
+            ForEach(vm.listingResults, id:\.self) { num in
+                VStack(alignment: .leading, spacing: 0) {
+                    HomeTile(num: num)
+                }
+            }
+        }.navigationBarTitle("alez", displayMode: .inline)
+    }
+}
+struct HomeTile:View {
+    let num: QueryResult
+    var body: some View {
+        
+            KFImage(URL(string:num.StandardFields.Photos?.first?.Uri300 ?? ""))
+                .resizable()
+                .frame(width:400, height:200)
+                .scaledToFit()
+                .cornerRadius(6)
+                .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
+                .shadow(radius: 10)
+            VStack {
+                Text(num.StandardFields.PublicRemarks ?? "")
+                    .padding()
+                    .font(.system(size: 16, weight: .regular))
+                    .foregroundColor(Color(.label))
+                Text(num.Id)
+                //                        .edgesIgnoringSafeArea(.top)
+                    .asTile()
+            }
+            .padding(.bottom)
             
         }
     }
-
 struct ContentView_Previews: PreviewProvider {
 //    var listing:Listings
     static var previews: some View {
         
         NavigationView{
-//            Card()
             HomeView()
+            
+//            PopDestDetailsView(listing: .init(Id: "alex", ResourceUri: "alex", StandardFields: .init(BuildingAreaTotal: 3333, Latitude: 33.333, Longitude: -118.111, ListingId: "3333", ListAgentName: "Monica", CoListAgentName: "Lorie", MlsStatus: "Active", ListOfficePhone: "3333", UnparsedFirstLineAddress: "334 33333", City: "Thousand", PostalCode: "3333", StateOrProvince: "", CurrentPricePublic: 33333, PublicRemarks: "lots of stuff", VirtualTours: nil, Videos: nil, Documents: nil, Photos: nil)))
+            
+            HomeDetailsView()
         
         
             
 
         }
         
+
     }
 }
