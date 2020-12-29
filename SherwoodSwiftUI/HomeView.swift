@@ -8,67 +8,67 @@
 import SwiftUI
 import KingfisherSwiftUI
 
-struct Listings: Decodable {
-    let D: d
-}
-struct d: Decodable {
-    let Results: [QueryResult]
-}
-struct QueryResult: Decodable, Hashable {
-    var Id: String
-    var ResourceUri: String
-    var StandardFields: Fields
-
-    struct Fields: Decodable, Hashable {
-        var BuildingAreaTotal: Float
-        let Latitude: Double
-        let Longitude: Double
-        var ListingId: String
-        var ListAgentName: String
-        var CoListAgentName: String
-        var MlsStatus: String
-        var ListOfficePhone: String
-        
-        var UnparsedFirstLineAddress: String
-        var City: String
-        var PostalCode: String
-        var StateOrProvince: String
-        
-        var CurrentPricePublic: Int
-        var PublicRemarks: String?
-      
-        var VirtualTours: [VirtualToursObjs]?
-        struct VirtualToursObjs: Codable, Hashable {
-            var Uri: String?
-        }
-        var Videos: [VideosObjs]?
-        struct VideosObjs: Codable, Hashable {
-            var ObjectHtml: String?
-        }
-    //
-        var Documents: [DocumentsAvailable]?
-        struct DocumentsAvailable: Codable, Hashable {
-            var Id: String
-            var ResourceId: String
-            var Name: String
-        }
-        var Photos: [PhotoDictionary]?
-        struct PhotoDictionary: Codable, Hashable {
-            var Id: String
-            var Name: String
-            var Uri300: String
-
-        }
-    }
-
-}
+//struct Listings: Decodable {
+//    let D: d
+//}
+//struct d: Decodable {
+//    let Results: [QueryResult]
+//}
+//struct QueryResult: Decodable, Hashable {
+//    var Id: String
+//    var ResourceUri: String
+//    var StandardFields: Fields
+//
+//    struct Fields: Decodable, Hashable {
+//        let CoListOfficeName: String
+//        var BuildingAreaTotal: Float
+//        let BedsTotal: Int
+//        let BathsTotal: Int
+//        let Latitude: Double
+//        let Longitude: Double
+//        var ListingId: String
+//        var ListAgentName: String
+//        var CoListAgentName: String
+//        var MlsStatus: String
+//        var ListOfficePhone: String
+//
+//        var UnparsedFirstLineAddress: String
+//        var City: String
+//        var PostalCode: String
+//        var StateOrProvince: String
+//
+//        var CurrentPricePublic: Int
+//        var PublicRemarks: String?
+//
+//        var VirtualTours: [VirtualToursObjs]?
+//        struct VirtualToursObjs: Codable, Hashable {
+//            var Uri: String?
+//        }
+//        var Videos: [VideosObjs]?
+//        struct VideosObjs: Codable, Hashable {
+//            var ObjectHtml: String?
+//        }
+//    //
+//        var Documents: [DocumentsAvailable]?
+//        struct DocumentsAvailable: Codable, Hashable {
+//            var Id: String
+//            var ResourceId: String
+//            var Name: String
+//        }
+//        var Photos: [PhotoDictionary]?
+//        struct PhotoDictionary: Codable, Hashable {
+//            var Id: String
+//            var Name: String
+//            var Uri300: String
+//
+//        }
+//    }
+//
+//}
 
 class HomeViewModel: ObservableObject {
 
     @Published var listingResults = [QueryResult]()
-//    @Published var listingFields = [Fields]()
-//    @Published var listingFields = [Listings]()
-//    @Published var fieldsResults = [QueryResult.Fields]()
 
     init() {
         guard let url = URL(string: "http://artisanbranding.com/test.json") else { return }
@@ -96,13 +96,10 @@ class HomeViewModel: ObservableObject {
 }
 
 struct HomeView: View {
-//    let name:String?
-//    init(name: String) {
-//        self.name = name
-//    }
+
     @ObservedObject var vm = HomeViewModel()
     var body: some View {
-        
+        NavigationView {
         ScrollView {
             ForEach(vm.listingResults, id: \.self) { listing in
                 NavigationLink(
@@ -114,8 +111,8 @@ struct HomeView: View {
                         
                     })
             }
-        }.navigationBarTitle("alex", displayMode: .inline)
-        
+        }.navigationBarTitle(vm.listingResults.first?.StandardFields.Photos?.first?.Name ?? "", displayMode: .inline)
+        }
     }
 }
 struct HomeRow: View {
@@ -133,26 +130,13 @@ struct HomeRow: View {
                 .clipped()
                 .shadow(radius: 10)
             
-            VStack (alignment: .leading, spacing: 0) {
-                
-                Text(listing.StandardFields.UnparsedFirstLineAddress)
-                    .font(.system(size: 16, weight: .regular))
-                    .foregroundColor(Color(.label))
-                Text("\(listing.StandardFields.CurrentPricePublic)")
-                    .font(.system(size: 12, weight: .regular))
-                    .foregroundColor(Color(.label))
-                Text(listing.StandardFields.MlsStatus)
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundColor(Color(.label))
-                
-            }.padding()
-            //                                        Spacer()
-            
-//                            .edgesIgnoringSafeArea(.top)
-        }.asTile()
-
+            RowData(listing: listing)
+        }.navigationBarTitle(listing.StandardFields.CoListOfficeName, displayMode: .inline)
+            .padding()
+            .asTile()
+        }
+       
     }
-}
 class HomeViewDetailViewModel: ObservableObject {
     @Published var isLoading = true
     init() {
@@ -167,22 +151,34 @@ struct PopDestDetailsView: View {
         ScrollView {
             KFImage(URL(string:listing.StandardFields.Photos?.first?.Uri300 ?? ""))
                 .resizable()
-                .frame(width:400, height:200)
-                .scaledToFit()
+                .scaledToFill()
                 .cornerRadius(6)
                 .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
+                .frame(width:400, height:200)
+                .clipped()
                 .shadow(radius: 10)
-            VStack {
+            VStack (alignment: .leading){
+
+                Text("About This Home")
+                    .font(.headline).bold()
+
                 Text(listing.StandardFields.PublicRemarks ?? "")
-                    .padding()
-                    .font(.system(size: 16, weight: .regular))
+                    
+                    .font(.system(size: 16, weight: .light))
                     .foregroundColor(Color(.label))
                 Text("\(listing.StandardFields.CurrentPricePublic)")
-                //                        .edgesIgnoringSafeArea(.top)
-                    .asTile()
-            }
-            Text(listing.StandardFields.CoListAgentName)
-        }.navigationBarTitle(listing.Id, displayMode: .inline)
+                                        
+                Text(listing.StandardFields.CoListAgentName)
+                HStack {
+                    Image(systemName: "heart")
+                    Image(systemName: "bubble.right")
+                    Image(systemName: "paperplane")
+                    Spacer()
+                    Image(systemName: "bookmark")
+                }
+            }.padding()
+
+        }.navigationBarTitle(listing.StandardFields.Photos?.first?.Name ?? "", displayMode: .inline)
     }
 }
 
@@ -202,7 +198,7 @@ struct HomeDetailsView: View {
                     HomeTile(num: num)
                 }
             }
-        }.navigationBarTitle("alez", displayMode: .inline)
+        }.navigationBarTitle("Sherwood", displayMode: .inline)
     }
 }
 struct HomeTile:View {
@@ -246,5 +242,89 @@ struct ContentView_Previews: PreviewProvider {
         }
         
 
+    }
+}
+
+struct RowData: View {
+    var listing: QueryResult
+    var body: some View {
+        VStack (alignment: .leading, spacing: 12) {
+            HStack (alignment: .bottom, spacing: 10){
+                
+                VStack (alignment: .leading) {
+                    Text("$\(listing.StandardFields.CurrentPricePublic)")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(Color(.label))
+                    Text("Price")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.gray)
+                }
+                Spacer()
+                
+                VStack (alignment: .leading) {
+                    Text("\(listing.StandardFields.BedsTotal)")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(Color(.label))
+                    Text("Beds")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.gray)
+                }
+                Spacer()
+                
+                VStack (alignment: .leading) {
+                    Text("\(listing.StandardFields.BathsTotal)")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(Color(.label))
+                    Text("Baths")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.gray)
+                }
+                
+                Spacer()
+                
+                VStack (alignment: .leading) {
+                    Spacer()
+                    Text("\(listing.StandardFields.BuildingAreaTotal, specifier: "%.0f")")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(Color(.label))
+                    
+                    Text("Sq Feet")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.gray)
+                    
+                }
+            }.padding(.horizontal)
+            
+            HStack (alignment: .lastTextBaseline, spacing: 0){
+                
+                VStack (alignment:.center) {
+                    HStack {
+                        //Spacer()
+                        VStack (alignment: .leading){
+                            Text(listing.StandardFields.UnparsedFirstLineAddress)
+                                .font(.system(size: 14, weight: .regular))
+                                .foregroundColor(Color(.gray))
+                            HStack {
+                                Text("\(listing.StandardFields.City),")
+                                    .font(.system(size: 14, weight: .regular))
+                                    .foregroundColor(Color(.gray))
+                                Text("\(listing.StandardFields.StateOrProvince),")
+                                    .font(.system(size: 14, weight: .regular))
+                                    .foregroundColor(Color(.gray))
+                                Text(listing.StandardFields.PostalCode)
+                                    .font(.system(size: 14, weight: .regular))
+                                    .foregroundColor(Color(.gray))
+                            }
+                        }
+                        
+                        
+                        
+                        //Spacer()
+                    }
+                }.padding(.horizontal)
+                
+            }
+            
+        }
     }
 }
