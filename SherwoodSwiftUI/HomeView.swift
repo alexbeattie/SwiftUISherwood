@@ -132,18 +132,18 @@ struct PopDestDetailsView: View {
                     
                     .font(.system(size: 16, weight: .light))
                     .foregroundColor(Color(.label))
-                //                    .frame(idealHeight:200)
+//                    .frame(idealHeight: 800)
                 
                 HStack {
-                    Spacer()
+//                    Spacer()
                     Text("\(listing.StandardFields.CurrentPricePublic)")
-                    Spacer()
+//                    Spacer()
                 }
                 
                 HStack {
-                    Spacer()
+//                    Spacer()
                     Text(listing.StandardFields.CoListAgentName)
-                    Spacer()
+//                    Spacer()
                 }
                 
                 
@@ -154,15 +154,16 @@ struct PopDestDetailsView: View {
                 }.padding()
                 
                 
-                //                .padding(.horizontal)
-                HStack {
+                                .padding(.horizontal)
+//                HStack {
                     
-                    Map(coordinateRegion: $region)
-                }
+//                }
 
-                
+                Map(coordinateRegion: $region).frame(height:200)
+                Spacer()
             }
-            .padding(.top, 20).padding(.horizontal)
+
+            .padding(.horizontal)
         }.navigationBarTitle(listing.StandardFields.Photos?.first?.Name ?? "", displayMode: .inline)
         
         
