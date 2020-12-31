@@ -41,7 +41,7 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                
+
                 ForEach(vm.listingResults, id: \.self) { listing in
                     
                     NavigationLink(
@@ -53,14 +53,23 @@ struct HomeView: View {
                            
                         })
                     
+
                 }
+                
             }
 //            Spacer()
-        }.navigationBarTitle(vm.listingResults.first?.StandardFields.CoListOfficeName ?? "", displayMode: .inline)
+            
+        }
+
+//        .navigationBarHidden(true)
+        .navigationBarTitle(vm.listingResults.first?.StandardFields.CoListOfficeName ?? "", displayMode: .inline)
+        
+
 
         
     }
 }
+
 struct HomeRow: View {
     let listing:QueryResult
     var body: some View {
@@ -79,7 +88,7 @@ struct HomeRow: View {
             RowData(listing: listing)
             
             
-            
+                
         }.padding()
             .asTile()
         
@@ -114,8 +123,8 @@ struct PopDestDetailsView: View {
                     .resizable()
                     .scaledToFill()
                     .frame(width: 400, height: 200)
-                    .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
-                    .clipped()
+//                    .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
+//                    .clipped()
             
             //                .cornerRadius(6)
             //                .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
@@ -159,43 +168,143 @@ struct PopDestDetailsView: View {
                     
 //                }
 
-                Map(coordinateRegion: $region).frame(height:200)
-                Spacer()
-            }
+//                Map(coordinateRegion: $region).frame(height:200)
+//                Spacer()
 
+//                Map(coordinateRegion: $region, interactionModes: <#T##MapInteractionModes#>, showsUserLocation: <#T##Bool#>, userTrackingMode: <#T##Binding<MapUserTrackingMode>?#>, annotationItems: <#T##RandomAccessCollection#>, annotationContent: <#T##(Identifiable) -> MapAnnotationProtocol#>)
+            }
+            Map(coordinateRegion: $region, annotationItems: attractions) { attraction in
+                 MapMarker(coordinate: .init(latitude: attraction.latitude, longitude: attraction.longitude), tint: .red)
+            }
             .padding(.horizontal)
         }.navigationBarTitle(listing.StandardFields.Photos?.first?.Name ?? "", displayMode: .inline)
-        
-        
+//        .background(Color.red)
+//        .ignoresSafeArea()
         .edgesIgnoringSafeArea(.bottom)
 //        .padding(.horizontal)
+        
     }
+    
+    let attractions: [Attraction] = [ .init(name: "alex", latitude: 34.131694, longitude: -118.89586)]
 
+}
+
+struct Attraction: Identifiable {
+    let id = UUID().uuidString
+    let name: String
+    let latitude, longitude: Double
 }
 struct HomeTile:View {
     let num: QueryResult
     var body: some View {
+//        ZStack {
+        KFImage(URL(string:num.StandardFields.Photos?.first?.Uri300 ?? ""))
+            .resizable()
+            .frame(width:400, height:200)
+            .scaledToFit()
+            .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
         
-            KFImage(URL(string:num.StandardFields.Photos?.first?.Uri300 ?? ""))
-                .resizable()
-                .frame(width:400, height:200)
-                .scaledToFit()
-//                .cornerRadius(6)
-                .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
-//                .shadow(radius: 10)
-            VStack {
-                Text(num.StandardFields.PublicRemarks ?? "")
-                    .padding()
-                    .font(.system(size: 16, weight: .regular))
-                    .foregroundColor(Color(.label))
-                Text(num.Id)
+        VStack {
+            Text(num.StandardFields.PublicRemarks ?? "")
+                .padding()
+                .font(.system(size: 16, weight: .regular))
+                .foregroundColor(Color(.label))
+            Text(num.Id)
+        }
+        .asTile()
+        
+//        .background(Color.red)
+//        }.foregroundColor(Color.blue)
+    }
+}
+
+
+struct RowData: View {
+    
+    var listing: QueryResult
+    var body: some View {
+        
+        ZStack {
+            VStack (alignment: .leading, spacing: 12) {
                 
+                HStack (alignment: .bottom, spacing: 10){
                     
+                    VStack (alignment: .leading) {
+                        Text("$\(listing.StandardFields.CurrentPricePublic)")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(Color(.label))
+                        Text("Price")
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundColor(.gray)
+                    }
+                    Spacer()
+                    
+                    VStack (alignment: .leading) {
+                        Text("\(listing.StandardFields.BedsTotal)")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(Color(.label))
+                        Text("Beds")
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundColor(.gray)
+                    }
+                    Spacer()
+                    
+                    VStack (alignment: .leading) {
+                        Text("\(listing.StandardFields.BathsTotal)")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(Color(.label))
+                        Text("Baths")
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundColor(.gray)
+                    }
+                    
+                    Spacer()
+                    
+                    VStack (alignment: .leading) {
+                        Spacer()
+                        Text("\(listing.StandardFields.BuildingAreaTotal, specifier: "%.0f")")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(Color(.label))
+                        
+                        Text("Sq Feet")
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundColor(.gray)
+                        
+                    }
+                }.padding(.horizontal)
                 
-            }.asTile()
-            
+                HStack (alignment: .lastTextBaseline, spacing: 0){
+                    
+                    VStack (alignment:.center) {
+                        HStack {
+                            VStack (alignment: .leading){
+                                Text(listing.StandardFields.UnparsedFirstLineAddress)
+                                    .font(.system(size: 14, weight: .regular))
+                                    .foregroundColor(Color(.gray))
+                                HStack {
+                                    Text("\(listing.StandardFields.City),")
+                                        .font(.system(size: 14, weight: .regular))
+                                        .foregroundColor(Color(.gray))
+                                    Text("\(listing.StandardFields.StateOrProvince),")
+                                        .font(.system(size: 14, weight: .regular))
+                                        .foregroundColor(Color(.gray))
+                                    Text(listing.StandardFields.PostalCode)
+                                        .font(.system(size: 14, weight: .regular))
+                                        .foregroundColor(Color(.gray))
+                                }
+                                
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+            }
         }
     }
+}
+
+
+
 struct ContentView_Previews: PreviewProvider {
 
     static var previews: some View {
@@ -206,94 +315,10 @@ struct ContentView_Previews: PreviewProvider {
             Spacer()
 
         }
+        .previewDisplayName(/*@START_MENU_TOKEN@*/"Preview"/*@END_MENU_TOKEN@*/)
+        
         
         
 
-    }
-}
-
-struct RowData: View {
-//    typealias Body = <#type#>
-    
-    var listing: QueryResult
-    var body: some View {
-    
-        ZStack {
-        VStack (alignment: .leading, spacing: 12) {
-            
-            HStack (alignment: .bottom, spacing: 10){
-                
-                VStack (alignment: .leading) {
-                    Text("$\(listing.StandardFields.CurrentPricePublic)")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(Color(.label))
-                    Text("Price")
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundColor(.gray)
-                }
-                Spacer()
-                
-                VStack (alignment: .leading) {
-                    Text("\(listing.StandardFields.BedsTotal)")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(Color(.label))
-                    Text("Beds")
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundColor(.gray)
-                }
-                Spacer()
-                
-                VStack (alignment: .leading) {
-                    Text("\(listing.StandardFields.BathsTotal)")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(Color(.label))
-                    Text("Baths")
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundColor(.gray)
-                }
-                
-                Spacer()
-                
-                VStack (alignment: .leading) {
-                    Spacer()
-                    Text("\(listing.StandardFields.BuildingAreaTotal, specifier: "%.0f")")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(Color(.label))
-                    
-                    Text("Sq Feet")
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundColor(.gray)
-                    
-                }
-            }.padding(.horizontal)
-            
-            HStack (alignment: .lastTextBaseline, spacing: 0){
-                
-                VStack (alignment:.center) {
-                    HStack {
-                        //Spacer()
-                        VStack (alignment: .leading){
-                            Text(listing.StandardFields.UnparsedFirstLineAddress)
-                                .font(.system(size: 14, weight: .regular))
-                                .foregroundColor(Color(.gray))
-                            HStack {
-                                Text("\(listing.StandardFields.City),")
-                                    .font(.system(size: 14, weight: .regular))
-                                    .foregroundColor(Color(.gray))
-                                Text("\(listing.StandardFields.StateOrProvince),")
-                                    .font(.system(size: 14, weight: .regular))
-                                    .foregroundColor(Color(.gray))
-                                Text(listing.StandardFields.PostalCode)
-                                    .font(.system(size: 14, weight: .regular))
-                                    .foregroundColor(Color(.gray))
-                            }
-                            
-                        }
-                    }
-                    
-                }.padding(.horizontal)
-            }
-        }
-    }
     }
 }
