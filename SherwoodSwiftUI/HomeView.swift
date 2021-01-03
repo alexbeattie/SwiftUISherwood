@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+
 import KingfisherSwiftUI
 import MapKit
 
@@ -14,9 +15,9 @@ class HomeViewModel: ObservableObject {
     @Published var listingResults = [QueryResult]()
 
     init() {
-//        guard let url = URL(string: "http://artisanbranding.com/test.json") else { return }
+        guard let url = URL(string: "http://artisanbranding.com/test.json") else { return }
         
-        guard let url = URL(string: "http://localhost:8000/test.json") else { return }
+//        guard let url = URL(string: "http://localhost:8000/test.json") else { return }
         
         
 //        http://localhost:8000/test.json
@@ -146,23 +147,80 @@ struct PopDestDetailsView: View {
 //    let id = UUID()
 //    let coordinate: CLLocationCoordinate2D
 //}
-class ListingAnnotation: NSObject, MKAnnotation {
-    let title: String?
-    let subtitle: String?
-    let coordinate: CLLocationCoordinate2D
-init(title: String?,
-     subtitle: String?,
-     coordinate: CLLocationCoordinate2D) {
-        self.title = title
-        self.subtitle = subtitle
-        self.coordinate = coordinate
-    }
-}
+//class ListingAnnotation: NSObject, MKAnnotation {
+//    let title: String?
+//    let subtitle: String?
+//    let coordinate: CLLocationCoordinate2D
+//init(title: String?,
+//     subtitle: String?,
+//     coordinate: CLLocationCoordinate2D) {
+//        self.title = title
+//        self.subtitle = subtitle
+//        self.coordinate = coordinate
+//    }
+//}
+
 struct MapView: UIViewRepresentable {
+    
+    
     let listing: QueryResult
+
+    class Coordinator: NSObject, MKMapViewDelegate {
+        var parent: MapView
+                init(_ parent: MapView) {
+                    self.parent = parent
+                }
+        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+//            guard !(annotation is MKUserLocation) else {
+//                return nil
+//            }
+            
+            let annotationIdentifier = "AnnotationIdentifier"
+            
+            let annoView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: annotationIdentifier)
+            annoView.pinTintColor = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
+            annoView.animatesDrop = true
+            annoView.canShowCallout = true
+        
+            // Add a RIGHT CALLOUT Accessory
+            let rightButton = UIButton(type: UIButton.ButtonType.detailDisclosure)
+            rightButton.frame = CGRect(x:0, y:0, width:32, height:32)
+            rightButton.clipsToBounds = true
+            rightButton.setImage(UIImage(named: "small-pin-map-7"), for: UIControl.State())
+            annoView.rightCalloutAccessoryView = rightButton
+            
+            let leftView = UIView()
+            
+            leftView.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+            leftView.backgroundColor = .blue
+            annoView.leftCalloutAccessoryView = leftView
+            //Add a LEFT IMAGE VIEW
+//            var leftIconView = UIImageView()
+////            leftIconView.contentMode = .scaleAspectFill
+////            leftIconView.contentMode = .scaleAspectFill
+//            let newBounds = CGRect(x:0.0, y:0.0, width:54.0, height:54.0)
+//            leftIconView.bounds = newBounds
+//            leftIconView.clipsToBounds = true
+//
+////            let thumbnailImageUrl =    KFImage(URL(string:listing.StandardFields.Photos?.first?.Uri300 ?? ""))
+//
+//            leftIconView = KFImage(URL(string:listing.StandardFields.Photos?.first?.Uri300 ?? ""))
+//
+//
+//            annoView.leftCalloutAccessoryView = leftIconView
+            
+            return annoView
+            
+            }
+        
+        }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
     func updateUIView(_ view: MKMapView, context: Context) {
         view.mapType = .hybrid
-//        view.mapView.delegate = self
+        view.delegate = context.coordinator
 
         let coordinate = CLLocationCoordinate2D(
             latitude: listing.StandardFields.Latitude, longitude: listing.StandardFields.Longitude)
@@ -177,33 +235,34 @@ struct MapView: UIViewRepresentable {
         let pin = MKPointAnnotation()
         pin.coordinate = pinDrop
         
-        view.addAnnotation(pin)
+       
 
         
 //            let coordinateRegion = MKCoordinateRegion.init(center: location, latitudinalMeters: 27500.0, longitudinalMeters: 27500.0)
 //            mapView.setRegion(coordinateRegion, animated: true)
-            
+//
 //            let pin = MKPointAnnotation()
 //            pin.coordinate = location
-//            pin.title = listing.StandardFields.UnparsedFirstLineAddress
+            pin.title = listing.StandardFields.UnparsedFirstLineAddress
 //
-//            let listPrice = listing.StandardFields.CurrentPricePublic
-//            let numberFormatter = NumberFormatter()
-//                numberFormatter.numberStyle = .decimal
+            let listPrice = listing.StandardFields.CurrentPricePublic
+            let numberFormatter = NumberFormatter()
+                numberFormatter.numberStyle = .decimal
+
+            let subtitle = "$\(numberFormatter.string(from: NSNumber(value:(UInt64(listPrice) )))!)"
 //
-//            let subtitle = "$\(numberFormatter.string(from: NSNumber(value:(UInt64(listPrice) )))!)"
-//
-//            pin.subtitle = subtitle
-//            pin.coordinate = location
+            pin.subtitle = subtitle
+//            pin.coordinate = pin
 //            view.addAnnotation(lat as! MKAnnotation)
-            
-            
+//        view.selectAnnotation(pin, animated: true)
+        view.addAnnotation(pin)
 //        view.addAnnotations(landmarks)
 
     }
     
     func makeUIView(context: Context) -> MKMapView {
         MKMapView(frame: .zero)
+        
         
     }
 }
