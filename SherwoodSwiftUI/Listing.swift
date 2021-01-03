@@ -14,6 +14,7 @@ struct d: Decodable {
     let Results: [QueryResult]
 }
 struct QueryResult: Decodable, Hashable {
+
     var Id: String
     var ResourceUri: String
     var StandardFields: Fields

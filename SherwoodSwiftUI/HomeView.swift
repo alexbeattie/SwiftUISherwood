@@ -14,8 +14,12 @@ class HomeViewModel: ObservableObject {
     @Published var listingResults = [QueryResult]()
 
     init() {
-        guard let url = URL(string: "http://artisanbranding.com/test.json") else { return }
+//        guard let url = URL(string: "http://artisanbranding.com/test.json") else { return }
         
+        guard let url = URL(string: "http://localhost:8000/test.json") else { return }
+        
+        
+//        http://localhost:8000/test.json
         URLSession.shared.dataTask(with: url) { (data, url, error) in
             DispatchQueue.main.async {
                 guard let data = data else { return }
@@ -34,39 +38,23 @@ class HomeViewModel: ObservableObject {
 }
 
 struct HomeView: View {
-
-//    @State private var showingDetail = false
-
+    
     @ObservedObject var vm = HomeViewModel()
     var body: some View {
         NavigationView {
             ScrollView {
-
+                
                 ForEach(vm.listingResults, id: \.self) { listing in
                     
                     NavigationLink(
                         destination: PopDestDetailsView(listing: listing),
-                        
                         label: {
-                            
                             HomeRow(listing: listing)
-                           
                         })
-                    
-
                 }
-                
             }
-//            Spacer()
-            
         }
-
-//        .navigationBarHidden(true)
         .navigationBarTitle(vm.listingResults.first?.StandardFields.CoListOfficeName ?? "", displayMode: .inline)
-        
-
-
-        
     }
 }
 
@@ -78,16 +66,11 @@ struct HomeRow: View {
             KFImage(URL(string:listing.StandardFields.Photos?.first?.Uri300 ?? ""))
                 .resizable()
                 .scaledToFill()
-                .cornerRadius(6)
-//                .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
-//                .shadow(radius: 2)
+//                .cornerRadius(6)
                 .frame(width:400, height:200)
                 .clipped()
-//                .shadow(radius: 10)
-            
+
             RowData(listing: listing)
-            
-            
                 
         }.padding()
             .asTile()
@@ -96,14 +79,6 @@ struct HomeRow: View {
     
        
     }
-//class HomeViewDetailViewModel: ObservableObject {
-//    @Published var isLoading = true
-//    init() {
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//            self.isLoading = false
-//        }
-//    }
-//}
 struct PopDestDetailsView: View {
     let listing:QueryResult
 //    @State var region = MKCoordinateRegion(center: .init(latitude: 34.132131, longitude: -118.884572), span: .init(latitudeDelta: 0.1, longitudeDelta: 0.1))
@@ -112,24 +87,16 @@ struct PopDestDetailsView: View {
     init(listing: QueryResult) {
         self.listing = listing
         self._region = State(initialValue: MKCoordinateRegion(center: .init(latitude: listing.StandardFields.Latitude, longitude: listing.StandardFields.Longitude), span: .init(latitudeDelta: 0.1, longitudeDelta: 0.1)))
-//        self.region = MKCoordinateRegion(center: .init(latitude: listing.StandardFields.Latitude, longitude: listing.StandardFields.Longitude), span: .init(latitudeDelta: 0.1, longitudeDelta: 0.1))
     }
 
     var body: some View {
-
+        
         ScrollView  {
-                KFImage(URL(string:listing.StandardFields.Photos?.first?.Uri300 ?? ""))
-                    
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 400, height: 200)
-//                    .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
-//                    .clipped()
-            
-            //                .cornerRadius(6)
-            //                .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
-            
-            //                .shadow(radius: 10)
+            KFImage(URL(string:listing.StandardFields.Photos?.first?.Uri300 ?? ""))
+                
+                .resizable()
+                .scaledToFill()
+                .frame(width: 400, height: 200)
             VStack (alignment: .leading) {
                 
                 Text("About This Home")
@@ -140,19 +107,12 @@ struct PopDestDetailsView: View {
                 Text(listing.StandardFields.PublicRemarks ?? "")
                     
                     .font(.system(size: 16, weight: .light))
-                    .foregroundColor(Color(.label))
-//                    .frame(idealHeight: 800)
-                
                 HStack {
-//                    Spacer()
                     Text("\(listing.StandardFields.CurrentPricePublic)")
-//                    Spacer()
                 }
                 
                 HStack {
-//                    Spacer()
                     Text(listing.StandardFields.CoListAgentName)
-//                    Spacer()
                 }
                 
                 
@@ -163,41 +123,96 @@ struct PopDestDetailsView: View {
                 }.padding()
                 
                 
-                                .padding(.horizontal)
-//                HStack {
-                    
-//                }
-
-//                Map(coordinateRegion: $region).frame(height:200)
-//                Spacer()
-
-//                Map(coordinateRegion: $region, interactionModes: <#T##MapInteractionModes#>, showsUserLocation: <#T##Bool#>, userTrackingMode: <#T##Binding<MapUserTrackingMode>?#>, annotationItems: <#T##RandomAccessCollection#>, annotationContent: <#T##(Identifiable) -> MapAnnotationProtocol#>)
+                .padding(.horizontal)
+                
+                MapView(listing: listing)
+//                Map(coordinateRegion: $region)
+                
             }
-            Map(coordinateRegion: $region, annotationItems: attractions) { attraction in
-                 MapMarker(coordinate: .init(latitude: attraction.latitude, longitude: attraction.longitude), tint: .red)
-            }
+            
+            
+            
             .padding(.horizontal)
         }.navigationBarTitle(listing.StandardFields.Photos?.first?.Name ?? "", displayMode: .inline)
-//        .background(Color.red)
-//        .ignoresSafeArea()
         .edgesIgnoringSafeArea(.bottom)
-//        .padding(.horizontal)
         
     }
+//    let attractions: [Attraction] = [ .init(name: "alex", latitude: 34.131694, longitude: -118.89586)]
     
-    let attractions: [Attraction] = [ .init(name: "alex", latitude: 34.131694, longitude: -118.89586)]
+
 
 }
-
-struct Attraction: Identifiable {
-    let id = UUID().uuidString
-    let name: String
-    let latitude, longitude: Double
+//struct City: Identifiable {
+//    let id = UUID()
+//    let coordinate: CLLocationCoordinate2D
+//}
+class ListingAnnotation: NSObject, MKAnnotation {
+    let title: String?
+    let subtitle: String?
+    let coordinate: CLLocationCoordinate2D
+init(title: String?,
+     subtitle: String?,
+     coordinate: CLLocationCoordinate2D) {
+        self.title = title
+        self.subtitle = subtitle
+        self.coordinate = coordinate
+    }
 }
+struct MapView: UIViewRepresentable {
+    let listing: QueryResult
+    func updateUIView(_ view: MKMapView, context: Context) {
+        view.mapType = .hybrid
+//        view.mapView.delegate = self
+
+        let coordinate = CLLocationCoordinate2D(
+            latitude: listing.StandardFields.Latitude, longitude: listing.StandardFields.Longitude)
+        let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        let region = MKCoordinateRegion(center: coordinate, span: span)
+        view.setRegion(region, animated: true)
+        
+        let lat = listing.StandardFields.Latitude
+        let lng = listing.StandardFields.Longitude
+            
+        let pinDrop = CLLocationCoordinate2DMake(lat, lng)
+        let pin = MKPointAnnotation()
+        pin.coordinate = pinDrop
+        
+        view.addAnnotation(pin)
+
+        
+//            let coordinateRegion = MKCoordinateRegion.init(center: location, latitudinalMeters: 27500.0, longitudinalMeters: 27500.0)
+//            mapView.setRegion(coordinateRegion, animated: true)
+            
+//            let pin = MKPointAnnotation()
+//            pin.coordinate = location
+//            pin.title = listing.StandardFields.UnparsedFirstLineAddress
+//
+//            let listPrice = listing.StandardFields.CurrentPricePublic
+//            let numberFormatter = NumberFormatter()
+//                numberFormatter.numberStyle = .decimal
+//
+//            let subtitle = "$\(numberFormatter.string(from: NSNumber(value:(UInt64(listPrice) )))!)"
+//
+//            pin.subtitle = subtitle
+//            pin.coordinate = location
+//            view.addAnnotation(lat as! MKAnnotation)
+            
+            
+//        view.addAnnotations(landmarks)
+
+    }
+    
+    func makeUIView(context: Context) -> MKMapView {
+        MKMapView(frame: .zero)
+        
+    }
+}
+
+
+
 struct HomeTile:View {
     let num: QueryResult
     var body: some View {
-//        ZStack {
         KFImage(URL(string:num.StandardFields.Photos?.first?.Uri300 ?? ""))
             .resizable()
             .frame(width:400, height:200)
@@ -212,113 +227,19 @@ struct HomeTile:View {
             Text(num.Id)
         }
         .asTile()
-        
-//        .background(Color.red)
-//        }.foregroundColor(Color.blue)
     }
 }
 
-
-struct RowData: View {
-    
-    var listing: QueryResult
-    var body: some View {
-        
-        ZStack {
-            VStack (alignment: .leading, spacing: 12) {
-                
-                HStack (alignment: .bottom, spacing: 10){
-                    
-                    VStack (alignment: .leading) {
-                        Text("$\(listing.StandardFields.CurrentPricePublic)")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(Color(.label))
-                        Text("Price")
-                            .font(.system(size: 14, weight: .regular))
-                            .foregroundColor(.gray)
-                    }
-                    Spacer()
-                    
-                    VStack (alignment: .leading) {
-                        Text("\(listing.StandardFields.BedsTotal)")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(Color(.label))
-                        Text("Beds")
-                            .font(.system(size: 14, weight: .regular))
-                            .foregroundColor(.gray)
-                    }
-                    Spacer()
-                    
-                    VStack (alignment: .leading) {
-                        Text("\(listing.StandardFields.BathsTotal)")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(Color(.label))
-                        Text("Baths")
-                            .font(.system(size: 14, weight: .regular))
-                            .foregroundColor(.gray)
-                    }
-                    
-                    Spacer()
-                    
-                    VStack (alignment: .leading) {
-                        Spacer()
-                        Text("\(listing.StandardFields.BuildingAreaTotal, specifier: "%.0f")")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(Color(.label))
-                        
-                        Text("Sq Feet")
-                            .font(.system(size: 14, weight: .regular))
-                            .foregroundColor(.gray)
-                        
-                    }
-                }.padding(.horizontal)
-                
-                HStack (alignment: .lastTextBaseline, spacing: 0){
-                    
-                    VStack (alignment:.center) {
-                        HStack {
-                            VStack (alignment: .leading){
-                                Text(listing.StandardFields.UnparsedFirstLineAddress)
-                                    .font(.system(size: 14, weight: .regular))
-                                    .foregroundColor(Color(.gray))
-                                HStack {
-                                    Text("\(listing.StandardFields.City),")
-                                        .font(.system(size: 14, weight: .regular))
-                                        .foregroundColor(Color(.gray))
-                                    Text("\(listing.StandardFields.StateOrProvince),")
-                                        .font(.system(size: 14, weight: .regular))
-                                        .foregroundColor(Color(.gray))
-                                    Text(listing.StandardFields.PostalCode)
-                                        .font(.system(size: 14, weight: .regular))
-                                        .foregroundColor(Color(.gray))
-                                }
-                                
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-            }
-        }
-    }
-}
 
 
 
 struct ContentView_Previews: PreviewProvider {
 
     static var previews: some View {
-//        ScrollView {
-        
+       
         NavigationView{
             HomeView()
-            Spacer()
 
         }
-        .previewDisplayName(/*@START_MENU_TOKEN@*/"Preview"/*@END_MENU_TOKEN@*/)
-        
-        
-        
-
     }
 }

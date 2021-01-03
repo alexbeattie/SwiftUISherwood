@@ -15,6 +15,7 @@
 		7802EC1825881EE400973292 /* SherwoodSwiftUIUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7802EC1725881EE400973292 /* SherwoodSwiftUIUITests.swift */; };
 		7843F066259A647A00143C54 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7843F065259A647A00143C54 /* ActivityIndicatorView.swift */; };
 		7843F06E259AAB9B00143C54 /* Listing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7843F06D259AAB9B00143C54 /* Listing.swift */; };
+		785CD2D3259FCAF5009E3E85 /* RowData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785CD2D2259FCAF5009E3E85 /* RowData.swift */; };
 		786BD200258AB4250009BA9E /* KingfisherSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 786BD1FF258AB4250009BA9E /* KingfisherSwiftUI */; };
 		788D6DC82596E315005E2CF7 /* DestinationDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788D6DC72596E315005E2CF7 /* DestinationDetailsView.swift */; };
 		78BC152E259A3D3B00C2A639 /* TileModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78BC152D259A3D3B00C2A639 /* TileModifier.swift */; };
@@ -65,6 +66,7 @@
 		7802EC1925881EE400973292 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7843F065259A647A00143C54 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		7843F06D259AAB9B00143C54 /* Listing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Listing.swift; sourceTree = "<group>"; };
+		785CD2D2259FCAF5009E3E85 /* RowData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowData.swift; sourceTree = "<group>"; };
 		788D6DC72596E315005E2CF7 /* DestinationDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationDetailsView.swift; sourceTree = "<group>"; };
 		78BC152D259A3D3B00C2A639 /* TileModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileModifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -120,6 +122,7 @@
 			children = (
 				7802EBFA25881EDF00973292 /* SherwoodSwiftUIApp.swift */,
 				7802EBFC25881EDF00973292 /* HomeView.swift */,
+				785CD2D2259FCAF5009E3E85 /* RowData.swift */,
 				78BC1531259A3D4D00C2A639 /* Utility */,
 				788D6DC72596E315005E2CF7 /* DestinationDetailsView.swift */,
 				7802EBFE25881EE300973292 /* Assets.xcassets */,
@@ -306,6 +309,7 @@
 				7802EBFB25881EDF00973292 /* SherwoodSwiftUIApp.swift in Sources */,
 				78BC152E259A3D3B00C2A639 /* TileModifier.swift in Sources */,
 				7843F06E259AAB9B00143C54 /* Listing.swift in Sources */,
+				785CD2D3259FCAF5009E3E85 /* RowData.swift in Sources */,
 				788D6DC82596E315005E2CF7 /* DestinationDetailsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
