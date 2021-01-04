@@ -15,9 +15,9 @@ class HomeViewModel: ObservableObject {
     @Published var listingResults = [QueryResult]()
 
     init() {
-        guard let url = URL(string: "http://artisanbranding.com/test.json") else { return }
+//        guard let url = URL(string: "http://artisanbranding.com/test.json") else { return }
         
-//        guard let url = URL(string: "http://localhost:8000/test.json") else { return }
+        guard let url = URL(string: "http://localhost:8000/test.json") else { return }
         
         
 //        http://localhost:8000/test.json
@@ -98,67 +98,46 @@ struct PopDestDetailsView: View {
                 .resizable()
                 .scaledToFill()
                 .frame(width: 400, height: 200)
+                .clipped()
             VStack (alignment: .leading) {
-                
-                Text("About This Home")
-                    .font(.headline).bold()
-                    .padding(.top)
-                    .padding(.bottom)
-                
-                Text(listing.StandardFields.PublicRemarks ?? "")
-                    
-                    .font(.system(size: 16, weight: .light))
-                HStack {
+            Group {
+                HStack (alignment: .lastTextBaseline) {
+
+                    Text("About This Home")
+                }
+                HStack (alignment: .lastTextBaseline)
+                {
+                    Text(listing.StandardFields.PublicRemarks ?? "")
+                        .frame(minWidth: 1, idealWidth: 1, maxWidth: .infinity, minHeight: 1, idealHeight: 500, maxHeight:.infinity, alignment: .top)
+//                        .layoutPriority(1)
+
+
+                }
+                HStack   {
+
                     Text("\(listing.StandardFields.CurrentPricePublic)")
                 }
                 
-                HStack {
-                    Text(listing.StandardFields.CoListAgentName)
-                }
-                
-                
-                HStack {
+                HStack (alignment: .lastTextBaseline) {
                     Text("Location")
-                    Spacer()
-                    
-                }.padding()
-                
-                
-                .padding(.horizontal)
-                
-                MapView(listing: listing)
-//                Map(coordinateRegion: $region)
-                
+
+                }
             }
-            
-            
-            
+                MapView(listing: listing)
+                    .frame(height:200)
+//                Spacer()
+            }
             .padding(.horizontal)
-        }.navigationBarTitle(listing.StandardFields.Photos?.first?.Name ?? "", displayMode: .inline)
-        .edgesIgnoringSafeArea(.bottom)
-        
+            
+            
+            
+        }
+//        .navigationBarTitle(listing.StandardFields.Photos?.first?.Name ?? "", displayMode: .inline)
     }
-//    let attractions: [Attraction] = [ .init(name: "alex", latitude: 34.131694, longitude: -118.89586)]
-    
 
 
 }
-//struct City: Identifiable {
-//    let id = UUID()
-//    let coordinate: CLLocationCoordinate2D
-//}
-//class ListingAnnotation: NSObject, MKAnnotation {
-//    let title: String?
-//    let subtitle: String?
-//    let coordinate: CLLocationCoordinate2D
-//init(title: String?,
-//     subtitle: String?,
-//     coordinate: CLLocationCoordinate2D) {
-//        self.title = title
-//        self.subtitle = subtitle
-//        self.coordinate = coordinate
-//    }
-//}
+
 
 struct MapView: UIViewRepresentable {
     
@@ -178,7 +157,7 @@ struct MapView: UIViewRepresentable {
             let annotationIdentifier = "AnnotationIdentifier"
             
             let annoView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: annotationIdentifier)
-            annoView.pinTintColor = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
+            annoView.pinTintColor = #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1)
             annoView.animatesDrop = true
             annoView.canShowCallout = true
         

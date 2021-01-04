@@ -8,6 +8,7 @@
 import Foundation
 
 struct Listings: Decodable {
+    
     let D: d
 }
 struct d: Decodable {
