@@ -15,7 +15,7 @@ struct RowData: View {
         ZStack {
             VStack (alignment: .leading, spacing: 12) {
                 
-                HStack (alignment: .bottom, spacing: 10){
+                HStack (alignment: .bottom, spacing: 20){
                     
                     VStack (alignment: .leading) {
                         Text("$\(listing.StandardFields.CurrentPricePublic)")
