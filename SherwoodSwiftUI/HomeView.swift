@@ -37,104 +37,148 @@ class HomeViewModel: ObservableObject {
         }.resume()
     }
 }
+extension Color {
+    static let discoverBackground = Color(.init(white: 0.95, alpha: 1))
+    static let defaultBackground = Color("defaultBackground")
+//    static let discoverBackground = Color.blue
+}
 
 struct HomeView: View {
     
     @ObservedObject var vm = HomeViewModel()
     var body: some View {
         NavigationView {
-            ScrollView {
-                
+//            ZStack {
+//                Color.discoverBackground.offset(y: 400)
+
+//                .foregroundColor(Color.black)
+//                Text("alex")
+            ScrollView (showsIndicators: false){
                 ForEach(vm.listingResults, id: \.self) { listing in
-                    
                     NavigationLink(
-                        destination: PopDestDetailsView(listing: listing),
+                        destination:NavigationLazyView( PopDestDetailsView(listing: listing)),
                         label: {
                             HomeRow(listing: listing)
                         })
+                        
                 }
+//                .listStyle(PlainListStyle())
+
+//                    List (vm.listingResults, id: \.self) { listing in
+//
+//                        Text("alx")
+//
+//                        HomeRow(listing: listing)
+//
+//                    }
+//                    .edgesIgnoringSafeArea(.all)
+
+//                }
             }
+//            .navigationBarHidden(true)
+                    .navigationBarTitle(vm.listingResults.first?.StandardFields.CoListOfficeName ?? "", displayMode: .inline)
+
+//            .edgesIgnoringSafeArea([.top, .bottom])
+//            }
         }
-        .navigationBarTitle(vm.listingResults.first?.StandardFields.CoListOfficeName ?? "", displayMode: .inline)
     }
 }
-
+struct NavigationLazyView<Content: View>: View {
+    
+    let build: () -> Content
+    init(_ build: @autoclosure @escaping () -> Content) {
+        self.build = build
+    }
+    var body: Content {
+        build()
+    }
+}
 struct HomeRow: View {
     let listing:QueryResult
     var body: some View {
-        VStack (alignment:.leading, spacing: 0) {
-            
+        VStack () {
+
             KFImage(URL(string:listing.StandardFields.Photos?.first?.Uri300 ?? ""))
                 .resizable()
                 .scaledToFill()
-//                .cornerRadius(6)
+                .cornerRadius(6)
                 .frame(width:400, height:200)
                 .clipped()
 
             RowData(listing: listing)
                 
-        }.padding()
-            .asTile()
-        
+
         }
-    
-       
+//        .edgesIgnoringSafeArea(.top)
+
+        .padding(.bottom)
+            .asTile()
+        .listStyle(PlainListStyle())
+        }
     }
 struct PopDestDetailsView: View {
+    
     let listing:QueryResult
-//    @State var region = MKCoordinateRegion(center: .init(latitude: 34.132131, longitude: -118.884572), span: .init(latitudeDelta: 0.1, longitudeDelta: 0.1))
     
     @State var region:MKCoordinateRegion
     init(listing: QueryResult) {
         self.listing = listing
         self._region = State(initialValue: MKCoordinateRegion(center: .init(latitude: listing.StandardFields.Latitude, longitude: listing.StandardFields.Longitude), span: .init(latitudeDelta: 0.1, longitudeDelta: 0.1)))
     }
-
+    
     var body: some View {
-        
-        ScrollView  {
-            KFImage(URL(string:listing.StandardFields.Photos?.first?.Uri300 ?? ""))
-                
-                .resizable()
-                .scaledToFill()
-                .frame(width: 400, height: 200)
-                .clipped()
-            VStack (alignment: .leading) {
-            Group {
-                HStack (alignment: .lastTextBaseline) {
 
-                    Text("About This Home")
-                }
-                HStack (alignment: .lastTextBaseline)
-                {
+     
+//            padding(.vertical)
+
+            ScrollView(showsIndicators: false) {
+                
+                KFImage(URL(string:listing.StandardFields.Photos?.first?.Uri300 ?? ""))
+
+                    .resizable()
+                    .scaledToFill()
+                    
+                    .frame(width: 400,
+                        height:200)
+                    .clipped()
+                Divider()
                     Text(listing.StandardFields.PublicRemarks ?? "")
-                        .frame(minWidth: 1, idealWidth: 1, maxWidth: .infinity, minHeight: 1, idealHeight: 500, maxHeight:.infinity, alignment: .top)
-//                        .layoutPriority(1)
-
-
-                }
-                HStack   {
-
-                    Text("\(listing.StandardFields.CurrentPricePublic)")
-                }
+                        .lineLimit(nil)
+                        .padding(.horizontal)
+                    Divider()
                 
-                HStack (alignment: .lastTextBaseline) {
+                    VStack {
+                        
+                        Text("\(listing.StandardFields.CurrentPricePublic)")
+                           
+                        
+//                        Spacer()
+                    }.font(.body)
+                
+                VStack {
                     Text("Location")
+                }.padding()
+//                    .padding()
+//                Spacer()
+                    VStack {
+//
+//                        Spacer()
 
-                }
-            }
+                    }
                 MapView(listing: listing)
                     .frame(height:200)
-//                Spacer()
-            }
-            .padding(.horizontal)
-            
-            
-            
-        }
-//        .navigationBarTitle(listing.StandardFields.Photos?.first?.Name ?? "", displayMode: .inline)
-    }
+                    .edgesIgnoringSafeArea(.bottom)
 
+                    
+            }
+
+        .navigationBarTitle(listing.StandardFields.Photos?.first?.Name ?? "", displayMode: .inline)
+            .edgesIgnoringSafeArea(.bottom)
+
+//            .edgesIgnoringSafeArea([.bottom, .top])
+//            .navigationBarTitle("Editor", displayMode: .inline)
+
+    }
 
 }
 
@@ -248,25 +292,25 @@ struct MapView: UIViewRepresentable {
 
 
 
-struct HomeTile:View {
-    let num: QueryResult
-    var body: some View {
-        KFImage(URL(string:num.StandardFields.Photos?.first?.Uri300 ?? ""))
-            .resizable()
-            .frame(width:400, height:200)
-            .scaledToFit()
-            .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
-        
-        VStack {
-            Text(num.StandardFields.PublicRemarks ?? "")
-                .padding()
-                .font(.system(size: 16, weight: .regular))
-                .foregroundColor(Color(.label))
-            Text(num.Id)
-        }
-        .asTile()
-    }
-}
+//struct HomeTile:View {
+//    let num: QueryResult
+//    var body: some View {
+//        KFImage(URL(string:num.StandardFields.Photos?.first?.Uri300 ?? ""))
+//            .resizable()
+//            .frame(width:400, height:200)
+//            .scaledToFit()
+//            .overlay(RoundedRectangle(cornerRadius: 1).stroke(Color.gray))
+//
+//        VStack {
+//            Text(num.StandardFields.PublicRemarks ?? "")
+//                .padding()
+//                .font(.system(size: 16, weight: .regular))
+//                .foregroundColor(Color(.label))
+//            Text(num.Id)
+//        }
+////        .asTile()
+//    }
+//}
 
 
 
@@ -276,8 +320,9 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
        
         NavigationView{
+          
             HomeView()
-
         }
+        .navigationBarTitle("alex", displayMode: .inline)
     }
 }
